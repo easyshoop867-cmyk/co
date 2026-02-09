@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Eazy SHOP | Professional Gaming Store</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;700&family=Kanit:wght@200;500;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --main-red: #ff0000;
+            --dark-red: #8b0000;
+            --bg-body: #050505;
+            --bg-card: #121212;
+            --bg-nav: rgba(10, 10, 10, 0.98);
+            --text-main: #ffffff;
+            --text-dim: #b0b0b0;
+            --border: #252525;
+            --shadow-red: 0 0 15px rgba(255, 0, 0, 0.4);
+            --transition: all 0.25s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans Lao', 'Kanit', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 12px; }
+        .hidden { display: none !important; }
+
+        /* --- Snow Effect --- */
+        .snowflake { position: fixed; top: -10px; color: white; font-size: 1em; user-select: none; z-index: 9999; animation: fall linear infinite; pointer-events: none; }
+        @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+
+        /* --- Header & Search --- */
+        header { background: var(--bg-nav); padding: 10px 0; position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--main-red); backdrop-filter: blur(10px); }
+        .nav-wrapper { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 800; color: var(--main-red); text-shadow: var(--shadow-red); cursor: pointer; }
+        .logo span { color: white; }
+        
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+        .search-box { position: relative; display: flex; align-items: center; }
+        .search-input { background: #1a1a1a; border: 1px solid var(--border); color: white; padding: 6px 10px 6px 28px; border-radius: 20px; width: 100px; transition: var(--transition); font-size: 12px; }
+        .search-input:focus { width: 140px; border-color: var(--main-red); outline: none; }
+        .search-icon { position: absolute; left: 10px; color: var(--text-dim); font-size: 10px; }
+
+        /* --- Components --- */
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); text-decoration: none; color: white; font-size: 14px; }
+        .btn-red { background: linear-gradient(135deg, var(--main-red), var(--dark-red)); box-shadow: var(--shadow-red); }
+        .btn-red:active { transform: scale(0.95); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-dim); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+        .hero-banner { width: 100%; height: 160px; border-radius: 12px; background-size: cover; background-position: center; margin-top: 15px; border: 1px solid var(--border); background-color: #111; }
+        .section-title { font-size: 1.1rem; margin: 20px 0 15px 0; border-left: 4px solid var(--main-red); padding-left: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* --- Category Grid (Fixed to Rectangle) --- */
+        .cat-grid { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none; }
+        .cat-grid::-webkit-scrollbar { display: none; }
+        /* ปรับขนาดกล่องหมวดหมู่เป็นแนวนอน */
+        .cat-item { min-width: 140px; text-align: center; cursor: pointer; }
+        .cat-img-box { 
+            width: 100%; 
+            aspect-ratio: 16/9; /* เปลี่ยนจาก 1/1 เป็นแนวนอน */
+            border-radius: 10px; /* เปลี่ยนจาก 50% เป็นมุมมนสี่เหลี่ยม */
+            overflow: hidden; 
+            border: 2px solid var(--border); 
+            margin-bottom: 5px; 
+            transition: var(--transition); 
+            background: #111;
+        }
+        .cat-item:hover .cat-img-box { border-color: var(--main-red); transform: translateY(-3px); }
+        .cat-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .cat-name { font-size: 12px; font-weight: 500; white-space: nowrap; margin-top: 5px; }
+
+        .prod-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .prod-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); display: flex; flex-direction: column; transition: var(--transition); }
+        .prod-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #1a1a1a; }
+        .prod-body { padding: 10px; flex-grow: 1; }
+        .prod-title { font-size: 13px; font-weight: 400; height: 38px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 8px; line-height: 1.4; }
+        .prod-price { font-size: 15px; font-weight: 800; color: var(--main-red); margin-bottom: 10px; }
+
+        /* --- Detail Page --- */
+        .detail-img { width: 100%; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px; }
+        .desc-box { background: #111; padding: 15px; border-radius: 10px; border-left: 3px solid var(--main-red); margin: 15px 0; font-size: 13px; color: #bbb; }
+
+        /* --- Admin --- */
+        .form-control { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: white; margin-bottom: 10px; font-size: 14px; }
+        .admin-table-container { width: 100%; overflow-x: auto; background: #111; border-radius: 10px; padding: 5px; }
+        .admin-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .admin-table th, .admin-table td { padding: 12px 8px; border-bottom: 1px solid #222; text-align: left; }
+        .admin-table th { color: var(--main-red); text-transform: uppercase; font-size: 11px; }
+
+        /* --- Modal --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: #0f0f0f; width: 100%; max-width: 400px; padding: 25px; border-radius: 15px; border: 1px solid var(--main-red); text-align: center; }
+        .social-btn { width: 100%; padding: 15px; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; text-decoration: none; color: white; font-weight: bold; }
+
+        /* --- Loader --- */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: var(--main-red); z-index: 9999; display: none; animation: loading 2s infinite; }
+        @keyframes loading { 0% { left: -100%; width: 100%; } 100% { left: 100%; width: 100%; } }
+
+        /* Mobile Optimization */
+        @media (max-width: 480px) {
+            .cat-item { min-width: 120px; }
+            .section-title h3 { font-size: 1rem; }
+            .logo { font-size: 18px; }
+        }
+
+        @media (min-width: 768px) {
+            .hero-banner { height: 300px; }
+            .prod-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+            .cat-item { min-width: 180px; }
+            .detail-flex { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px; }
+            .logo { font-size: 26px; }
+            .search-input { width: 180px; }
+            .search-input:focus { width: 250px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loader"></div>
+    <div id="snow-container"></div>
+
+    <header>
+        <div class="container nav-wrapper">
+            <div class="logo" onclick="router.home()">Eazy<span>SHOP</span></div>
+            <div class="nav-right">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="main-search" class="search-input" placeholder="ຄົ້ນຫາ..." onkeyup="app.handleSearch(event)">
+                </div>
+                <i class="fas fa-headset" style="cursor:pointer; color:var(--main-red)" onclick="app.openContact()"></i>
+            </div>
+        </div>
+    </header>
+
+    <main id="view-home" class="page-view container">
+        <div id="hero" class="hero-banner"></div>
+        
+        <div class="section-title"><h3>ໝວດໝູ່ສິນຄ້າ</h3></div>
+        <div id="cat-list-home" class="cat-grid"></div>
+        
+        <div class="section-title">
+            <h3>ສິນຄ້າແນະນຳ</h3>
+            <span onclick="router.all()" style="font-size:12px; color:var(--text-dim); cursor:pointer;">ເບິ່ງທັງໝົດ ></span>
+        </div>
+        <div id="home-prods" class="prod-grid"></div>
+    </main>
+
+    <main id="view-list" class="page-view container hidden" style="padding-top:15px;">
+        <button class="btn btn-outline btn-sm" onclick="router.home()"><i class="fas fa-arrow-left"></i> ກັບຄືນ</button>
+        <div class="section-title"><h3 id="list-title">ສິນຄ້າທັງໝົດ</h3></div>
+        <div id="list-prods" class="prod-grid"></div>
+    </main>
+
+    <main id="view-detail" class="page-view container hidden" style="padding-top:15px;">
+        <button class="btn btn-outline btn-sm" onclick="router.back()" style="margin-bottom:15px;"><i class="fas fa-arrow-left"></i> ກັບຄືນ</button>
+        <div class="detail-flex">
+            <img id="det-img" src="" class="detail-img">
+            <div>
+                <h1 id="det-title" style="font-size: 1.5rem; line-height: 1.2;">Product Name</h1>
+                <div id="det-price" class="prod-price" style="font-size: 1.8rem; margin: 10px 0;">0 ₭</div>
+                <div class="desc-box">
+                    <p style="color:var(--main-red); font-weight:bold; margin-bottom:5px;">ລາຍລະອຽດ:</p>
+                    <p id="det-desc" style="white-space: pre-line;"></p>
+                </div>
+                <button class="btn btn-red" style="width: 100%; padding: 18px;" onclick="app.orderWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> ສັ່ງຊື້ຜ່ານ WhatsApp
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <main id="view-admin" class="page-view container hidden" style="padding-top:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2>Admin Panel</h2>
+            <button class="btn btn-outline btn-sm" onclick="location.reload()">Logout</button>
+        </div>
+        
+        <div style="display:flex; gap:5px; margin-bottom:20px; overflow-x:auto; padding-bottom:5px;">
+            <button class="btn btn-red btn-sm" onclick="app.tab('tab-p')">ສິນຄ້າ</button>
+            <button class="btn btn-red btn-sm" onclick="app.tab('tab-c')">ໝວດໝູ່</button>
+            <button class="btn btn-red btn-sm" onclick="app.tab('tab-u')">Admin</button>
+            <button class="btn btn-red btn-sm" onclick="app.tab('tab-s')">ຕັ້ງຄ່າ</button>
+        </div>
+
+        <div id="tab-p" class="admin-tab">
+            <div style="background:#111; padding:15px; border-radius:12px; margin-bottom:20px;">
+                <input type="hidden" id="edit-p-id">
+                <input type="text" id="p-name" class="form-control" placeholder="ຊື່ສินຄ້າ">
+                <input type="number" id="p-price" class="form-control" placeholder="ລາຄາ (ຕົວເລກເທົ່ານັ້ນ)">
+                <input type="text" id="p-img" class="form-control" placeholder="URL ຮູບສິນຄ້າ">
+                <select id="p-cat" class="form-control"></select>
+                <textarea id="p-desc" class="form-control" placeholder="ລາຍລະອຽດສินค้า..." style="height:80px;"></textarea>
+                <button id="btn-save-p" class="btn btn-red" style="width:100%" onclick="app.saveProduct()">ບັນທຶກສິນຄ້າ</button>
+            </div>
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead><tr><th>ຊື່ສິນຄ້າ</th><th>ລາຄา</th><th>ຈັດການ</th></tr></thead>
+                    <tbody id="t-prods"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-c" class="admin-tab hidden">
+            <div style="background:#111; padding:15px; border-radius:12px; margin-bottom:20px;">
+                <input type="hidden" id="edit-c-id">
+                <input type="text" id="c-name" class="form-control" placeholder="ຊື່ໝວດໝູ່">
+                <input type="text" id="c-img" class="form-control" placeholder="URL ຮູບໝວດໝູ່">
+                <button id="btn-save-c" class="btn btn-red" style="width:100%" onclick="app.saveCategory()">ບັນທຶກໝວດໝູ່</button>
+            </div>
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead><tr><th>ຮູບ</th><th>ຊື່ໝວດໝູ່</th><th>ຈັດการ</th></tr></thead>
+                    <tbody id="t-cats"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-u" class="admin-tab hidden">
+             <div style="background:#111; padding:15px; border-radius:12px; margin-bottom:20px;">
+                <input type="text" id="u-user" class="form-control" placeholder="Username">
+                <input type="text" id="u-pass" class="form-control" placeholder="Password">
+                <button class="btn btn-red" style="width:100%" onclick="app.saveUser()">ເພີ່ມ Admin</button>
+            </div>
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead><tr><th>User</th><th>Pass</th><th>ລົບ</th></tr></thead>
+                    <tbody id="t-users"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-s" class="admin-tab hidden">
+            <div style="background:#111; padding:15px; border-radius:12px;">
+                <label style="font-size:12px; color:var(--main-red)">Banner URL:</label>
+                <input type="text" id="s-banner" class="form-control">
+                <label style="font-size:12px; color:var(--main-red)">WhatsApp Number (Ex: 85620...):</label>
+                <input type="text" id="s-wa" class="form-control">
+                <label style="font-size:12px; color:var(--main-red)">TikTok Link/User:</label>
+                <input type="text" id="s-tt" class="form-control">
+                <label style="font-size:12px; color:var(--main-red)">Facebook Link:</label>
+                <input type="text" id="s-fb" class="form-control">
+                <button class="btn btn-red" style="width:100%; margin-top:10px;" onclick="app.saveSettings()">ບັນທຶກການຕັ້ງຄ່າ</button>
+            </div>
+        </div>
+    </main>
+
+    <div id="contact-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                <h3 style="color:var(--main-red)">ຕິດຕໍ່ພວກເຮົາ</h3>
+                <i class="fas fa-times" onclick="app.closeModal('contact-modal')" style="cursor:pointer"></i>
+            </div>
+            <a href="#" id="l-wa" target="_blank" class="social-btn" style="background:#25d366"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            <a href="#" id="l-tt" target="_blank" class="social-btn" style="background:#000; border:1px solid #333"><i class="fab fa-tiktok"></i> TikTok</a>
+            <a href="#" id="l-fb" target="_blank" class="social-btn" style="background:#1877f2"><i class="fab fa-facebook"></i> Facebook</a>
+        </div>
+    </div>
+
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width:320px;">
+            <h3>Admin Login</h3><br>
+            <input type="text" id="log-u" class="form-control" placeholder="Username">
+            <input type="password" id="log-p" class="form-control" placeholder="Password">
+            <button class="btn btn-red" style="width:100%" onclick="app.login()">Login</button>
+            <p onclick="app.closeModal('login-modal')" style="margin-top:15px; font-size:12px; color:var(--text-dim); cursor:pointer;">ຍົກເລີກ</p>
+        </div>
+    </div>
+
+    <footer style="margin-top:50px; padding:30px 0; text-align:center; border-top:1px solid var(--border)">
+        <p style="font-size:11px; color:var(--text-dim)">© 2026 Eazy SHOP. Developed for Professional Gaming Store.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Configuration
+        const SUPABASE_URL = 'https://qdzurrtniagbkfbcougk.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkenVycnRuaWFnYmtmYmNvdWdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1Mzg0OTksImV4cCI6MjA4NjExNDQ5OX0.psyh10Xm4cOQKt0z7NiObHImWYJ4_5lu-ZU3UhUmrLs';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let activeProduct = null;
+
+        // Snow Effect
+        function initSnow() {
+            const container = document.getElementById('snow-container');
+            for (let i = 0; i < 25; i++) {
+                const flake = document.createElement('div');
+                flake.className = 'snowflake';
+                flake.innerHTML = ['❄','❅','❆'][Math.floor(Math.random()*3)];
+                flake.style.left = Math.random() * 100 + 'vw';
+                flake.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                flake.style.opacity = Math.random();
+                flake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                flake.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(flake);
+            }
+        }
+
+        const router = {
+            history: [],
+            home: () => { router.show('view-home'); app.renderHome(); },
+            all: () => {
+                document.getElementById('list-title').innerText = "ສິນຄ້າທັງໝົດ";
+                app.renderProds(app.db.products, 'list-prods');
+                router.show('view-list');
+            },
+            cat: (id) => {
+                const c = app.db.categories.find(x => x.id == id);
+                document.getElementById('list-title').innerText = "ໝວດ: " + (c ? c.name : "");
+                app.renderProds(app.db.products.filter(p => p.catid == id), 'list-prods');
+                router.show('view-list');
+            },
+            detail: (id) => {
+                const p = app.db.products.find(x => x.id == id);
+                if(!p) return;
+                activeProduct = p;
+                document.getElementById('det-img').src = p.img;
+                document.getElementById('det-title').innerText = p.name;
+                document.getElementById('det-price').innerText = Number(p.price).toLocaleString() + " ₭";
+                document.getElementById('det-desc').innerText = p.desc;
+                router.show('view-detail');
+            },
+            admin: () => { router.show('view-admin'); app.renderAdmin(); },
+            show: (id) => {
+                const active = document.querySelector('.page-view:not(.hidden)');
+                if(active && active.id !== id) router.history.push(active.id);
+                document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden'));
+                document.getElementById(id).classList.remove('hidden');
+                window.scrollTo(0,0);
+            },
+            back: () => {
+                const prev = router.history.pop() || 'view-home';
+                router.show(prev);
+            }
+        };
+
+        const app = {
+            db: { settings: { banner: "", contact: { wa: "", tt: "", fb: "" } }, categories: [], products: [], users: [] },
+            
+            init: async function() {
+                initSnow();
+                this.loading(true);
+                await this.fetchData();
+                this.renderHome();
+                this.loading(false);
+            },
+
+            loading: (show) => document.getElementById('loader').style.display = show ? 'block' : 'none',
+
+            fetchData: async function() {
+                const { data: st } = await _supabase.from('settings').select('*').eq('id', 1).maybeSingle();
+                const { data: ct } = await _supabase.from('categories').select('*');
+                const { data: pd } = await _supabase.from('products').select('*').order('created_at', { ascending: false });
+                const { data: us } = await _supabase.from('users').select('*');
+                
+                if(st && st.data) this.db.settings = st.data;
+                if(ct) this.db.categories = ct;
+                if(pd) this.db.products = pd;
+                if(us) this.db.users = us;
+            },
+
+            renderHome: function() {
+                if(this.db.settings.banner) document.getElementById('hero').style.backgroundImage = `url('${this.db.settings.banner}')`;
+                
+                document.getElementById('cat-list-home').innerHTML = this.db.categories.map(c => `
+                    <div class="cat-item" onclick="router.cat(${c.id})">
+                        <div class="cat-img-box"><img src="${c.img}" onerror="this.src='https://via.placeholder.com/300x169?text=No+Image'" loading="lazy"></div>
+                        <div class="cat-name">${c.name}</div>
+                    </div>
+                `).join('');
+
+                this.renderProds(this.db.products.slice(0, 10), 'home-prods');
+            },
+
+            renderProds: function(list, target) {
+                const container = document.getElementById(target);
+                if(!list.length) { container.innerHTML = "<p style='grid-column:1/-1; text-align:center; padding:40px; color:#555;'>ບໍ່ມີສິນຄ້າ</p>"; return; }
+                
+                container.innerHTML = list.map(p => `
+                    <div class="prod-card" onclick="router.detail(${p.id})">
+                        <img src="${p.img}" class="prod-img" onerror="this.src='https://via.placeholder.com/300?text=No+Image'" loading="lazy">
+                        <div class="prod-body">
+                            <div class="prod-title">${p.name}</div>
+                            <div class="prod-price">${Number(p.price).toLocaleString()} ₭</div>
+                            <button class="btn btn-red btn-sm" style="width:100%">ເບິ່ງລາຍລະອຽດ</button>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            handleSearch: function(e) {
+                const val = e.target.value.trim().toLowerCase();
+                if(val === "khoudadmin") { e.target.value=""; this.openModal('login-modal'); return; }
+                if(e.key === 'Enter' && val) {
+                    const res = this.db.products.filter(p => p.name.toLowerCase().includes(val));
+                    document.getElementById('list-title').innerText = `ຜົນການຄົ້ນຫາ: "${val}"`;
+                    this.renderProds(res, 'list-prods');
+                    router.show('view-list');
+                }
+            },
+
+            orderWhatsApp: function() {
+                if(!activeProduct) return;
+                const wa = this.db.settings.contact.wa || "8562029268167";
+                const msg = `ສະບາຍດີ Eazy SHOP!\nຂ້ອຍສົນໃຈສິນຄ້ານີ້:\n\n📌 ${activeProduct.name}\n💰 ລາຄາ: ${Number(activeProduct.price).toLocaleString()} ₭\n\nກະລຸນາບອກລາຍລະອຽດການຊຳລະເງິນແດ່.`;
+                window.open(`https://wa.me/${wa.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`, '_blank');
+            },
+
+            // Admin Logic
+            tab: function(id) {
+                document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden'));
+                document.getElementById(id).classList.remove('hidden');
+                this.renderAdmin();
+            },
+
+            renderAdmin: function() {
+                document.getElementById('t-prods').innerHTML = this.db.products.map(p => `
+                    <tr>
+                        <td>${p.name}</td>
+                        <td>${Number(p.price).toLocaleString()}</td>
+                        <td>
+                            <i class="fas fa-edit" style="color:cyan; margin-right:10px" onclick="app.editP(${p.id})"></i>
+                            <i class="fas fa-trash" style="color:var(--main-red)" onclick="app.delP(${p.id})"></i>
+                        </td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('p-cat').innerHTML = this.db.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+                document.getElementById('t-cats').innerHTML = this.db.categories.map(c => `
+                    <tr>
+                        <td><img src="${c.img}" width="30" height="30" style="object-fit:cover; border-radius:4px"></td>
+                        <td>${c.name}</td>
+                        <td>
+                            <i class="fas fa-edit" style="color:cyan; margin-right:10px" onclick="app.editC(${c.id})"></i>
+                            <i class="fas fa-trash" style="color:var(--main-red)" onclick="app.delC(${c.id})"></i>
+                        </td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('t-users').innerHTML = this.db.users.map(u => `
+                    <tr><td>${u.username}</td><td>${u.password}</td><td><i class="fas fa-trash" onclick="app.delU(${u.id})"></i></td></tr>
+                `).join('');
+
+                const s = this.db.settings;
+                document.getElementById('s-banner').value = s.banner || "";
+                document.getElementById('s-wa').value = s.contact.wa || "";
+                document.getElementById('s-tt').value = s.contact.tt || "";
+                document.getElementById('s-fb').value = s.contact.fb || "";
+            },
+
+            saveProduct: async function() {
+                const id = document.getElementById('edit-p-id').value;
+                const data = {
+                    name: document.getElementById('p-name').value,
+                    price: parseInt(document.getElementById('p-price').value),
+                    img: document.getElementById('p-img').value,
+                    catid: parseInt(document.getElementById('p-cat').value),
+                    desc: document.getElementById('p-desc').value
+                };
+                this.loading(true);
+                const res = id ? await _supabase.from('products').update(data).eq('id', id) : await _supabase.from('products').insert([data]);
+                if(res.error) alert(res.error.message); else location.reload();
+            },
+
+            saveCategory: async function() {
+                const id = document.getElementById('edit-c-id').value;
+                const data = { name: document.getElementById('c-name').value, img: document.getElementById('c-img').value };
+                this.loading(true);
+                const res = id ? await _supabase.from('categories').update(data).eq('id', id) : await _supabase.from('categories').insert([data]);
+                if(res.error) alert(res.error.message); else location.reload();
+            },
+
+            saveSettings: async function() {
+                const data = {
+                    banner: document.getElementById('s-banner').value,
+                    contact: {
+                        wa: document.getElementById('s-wa').value,
+                        tt: document.getElementById('s-tt').value,
+                        fb: document.getElementById('s-fb').value
+                    }
+                };
+                this.loading(true);
+                const { error } = await _supabase.from('settings').update({ data }).eq('id', 1);
+                if(error) alert(error.message); else location.reload();
+            },
+
+            saveUser: async function() {
+                const username = document.getElementById('u-user').value;
+                const password = document.getElementById('u-pass').value;
+                if(!username || !password) return;
+                await _supabase.from('users').insert([{ username, password }]);
+                location.reload();
+            },
+
+            delP: async function(id) { if(confirm('ລົບສິນຄ້ານີ້?')) { await _supabase.from('products').delete().eq('id', id); location.reload(); } },
+            delC: async function(id) { if(confirm('ລົບໝວດໝູ່ນີ້?')) { await _supabase.from('categories').delete().eq('id', id); location.reload(); } },
+            delU: async function(id) { if(confirm('ລົບ Admin ນີ້?')) { await _supabase.from('users').delete().eq('id', id); location.reload(); } },
+
+            editP: function(id) {
+                const p = this.db.products.find(x => x.id == id);
+                document.getElementById('edit-p-id').value = p.id;
+                document.getElementById('p-name').value = p.name;
+                document.getElementById('p-price').value = p.price;
+                document.getElementById('p-img').value = p.img;
+                document.getElementById('p-cat').value = p.catid;
+                document.getElementById('p-desc').value = p.desc;
+                document.getElementById('btn-save-p').innerText = "Update Product";
+                window.scrollTo(0,0);
+            },
+
+            editC: function(id) {
+                const c = this.db.categories.find(x => x.id == id);
+                document.getElementById('edit-c-id').value = c.id;
+                document.getElementById('c-name').value = c.name;
+                document.getElementById('c-img').value = c.img;
+                document.getElementById('btn-save-c').innerText = "Update Category";
+                window.scrollTo(0,0);
+            },
+
+            login: function() {
+                const u = document.getElementById('log-u').value;
+                const p = document.getElementById('log-p').value;
+                const admin = this.db.users.find(x => x.username === u && x.password === p);
+                if(admin || (u === "khoud" && p === "khoud123@")) {
+                    this.closeModal('login-modal');
+                    router.admin();
+                } else { alert('User หรือ Pass ผิด!'); }
+            },
+
+            openContact: function() {
+                const c = this.db.settings.contact;
+                document.getElementById('l-wa').href = `https://wa.me/${c.wa.replace(/\D/g,'')}`;
+                document.getElementById('l-tt').href = c.tt.includes('http') ? c.tt : `https://tiktok.com/@${c.tt}`;
+                document.getElementById('l-fb').href = c.fb;
+                this.openModal('contact-modal');
+            },
+            openModal: (id) => document.getElementById(id).classList.add('active'),
+            closeModal: (id) => document.getElementById(id).classList.remove('active')
+        };
+
+        app.init();
+    </script>
+</body>
+</html>
