@@ -468,31 +468,38 @@ function togglePw(id, btn) {
                 app.renderAdmin(); 
             },
             show: (id) => {
-                const mask = document.getElementById('page-transition-mask');
+                // เฉพาะหน้าหลักที่ควรมี page transition
+                const MAIN_VIEWS = ['view-home', 'view-list', 'view-detail'];
+                const active = document.querySelector('.page-view:not(.hidden)');
+                const useTransition = MAIN_VIEWS.includes(id) && active && active.id !== id && MAIN_VIEWS.includes(active.id);
+
                 const doShow = () => {
-                    const active = document.querySelector('.page-view:not(.hidden)');
                     if(active && active.id !== id) router.history.push(active.id);
                     document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden'));
                     document.getElementById(id).classList.remove('hidden');
-                    window.scrollTo(0,0);
+                    window.scrollTo(0, 0);
                 };
-                if(mask) {
-                    // Fade to dark
+
+                const mask = document.getElementById('page-transition-mask');
+                if(mask && useTransition) {
                     mask.classList.add('fading-in');
                     mask.classList.remove('fading-out');
                     setTimeout(() => {
                         doShow();
-                        // Fade back to light
                         mask.classList.remove('fading-in');
                         mask.classList.add('fading-out');
-                    }, 280);
+                    }, 220);
                 } else {
                     doShow();
                 }
             },
             back: () => {
                 const prev = router.history.pop() || 'view-home';
-                router.show(prev);
+                // กดกลับไม่ต้องมี transition — ให้รู้สึก instant
+                const active = document.querySelector('.page-view:not(.hidden)');
+                document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden'));
+                document.getElementById(prev).classList.remove('hidden');
+                window.scrollTo(0, 0);
             }
         };
 

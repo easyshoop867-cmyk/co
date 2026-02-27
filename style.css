@@ -1831,9 +1831,9 @@
             pointer-events: none;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.35s ease, visibility 0.35s ease;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
         }
-        #page-transition-mask.fading-in  { opacity: 1; visibility: visible; }
+        #page-transition-mask.fading-in  { opacity: 0.85; visibility: visible; }
         #page-transition-mask.fading-out { opacity: 0; visibility: hidden; }
         .spin-confirm-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
         .spin-confirm-opt { flex:1; margin:0 5px; border-radius:14px; padding:14px 10px; text-align:center; cursor:pointer; border:2px solid transparent; transition:0.2s; background:#111; }
