@@ -7,25 +7,32 @@ function togglePw(id, btn) {
 }
 
 // ===== slideAnimate =====
+    // ===== SLIDE ANIMATE — ต้องกำหนดก่อน app ทุกอย่าง =====
     function slideAnimate(selector) {
         const items = typeof selector === 'string'
             ? document.querySelectorAll(selector)
             : selector;
         if(!items || !items.length) return;
+        // Reset: ซ่อนทั้งหมดก่อน ให้ animation เริ่มใหม่
         items.forEach(el => el.classList.remove('visible'));
+        let globalIdx = 0;
         const obs = new IntersectionObserver((entries, o) => {
-            entries
-                .filter(e => e.isIntersecting)
-                .forEach((entry, i) => {
-                    setTimeout(() => entry.target.classList.add('visible'), i * 100);
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    const delay = globalIdx * 100; // stagger 100ms
+                    globalIdx++;
+                    setTimeout(() => entry.target.classList.add('visible'), delay);
                     o.unobserve(entry.target);
-                });
+                }
+            });
         }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
         items.forEach(el => obs.observe(el));
+        // Fallback 3s
         setTimeout(() => {
             items.forEach((el, i) => {
-                if(!el.classList.contains('visible'))
+                if (!el.classList.contains('visible')) {
                     setTimeout(() => el.classList.add('visible'), i * 100);
+                }
             });
         }, 3000);
     }
@@ -461,14 +468,27 @@ function togglePw(id, btn) {
                 app.renderAdmin(); 
             },
             show: (id) => {
-                const active = document.querySelector('.page-view:not(.hidden)');
-                if(active && active.id !== id) router.history.push(active.id);
-                document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden'));
-                const next = document.getElementById(id);
-                next.classList.remove('hidden');
-                next.style.animation = 'pageFadeIn 0.3s ease';
-                setTimeout(() => { next.style.animation = ''; }, 350);
-                window.scrollTo(0,0);
+                const mask = document.getElementById('page-transition-mask');
+                const doShow = () => {
+                    const active = document.querySelector('.page-view:not(.hidden)');
+                    if(active && active.id !== id) router.history.push(active.id);
+                    document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden'));
+                    document.getElementById(id).classList.remove('hidden');
+                    window.scrollTo(0,0);
+                };
+                if(mask) {
+                    // Fade to dark
+                    mask.classList.add('fading-in');
+                    mask.classList.remove('fading-out');
+                    setTimeout(() => {
+                        doShow();
+                        // Fade back to light
+                        mask.classList.remove('fading-in');
+                        mask.classList.add('fading-out');
+                    }, 280);
+                } else {
+                    doShow();
+                }
             },
             back: () => {
                 const prev = router.history.pop() || 'view-home';

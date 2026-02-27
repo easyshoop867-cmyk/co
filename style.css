@@ -41,11 +41,6 @@
         .container { max-width: 1200px; margin: 0 auto; padding: 0 12px; }
         .hidden { display: none !important; }
 
-        @keyframes pageFadeIn {
-            from { opacity: 0; }
-            to   { opacity: 1; }
-        }
-
         /* === Loading Screen - ตัวการ์ตูนเอลฟ์ === */
         #loading-screen {
             position: fixed;
@@ -1139,19 +1134,14 @@
             align-items: center; 
             justify-content: center; 
             padding: 20px;
-            animation: fadeIn 0.4s ease;
+            animation: popupOverlayFadeIn 0.45s ease forwards;
         }
         
         .popup-container { 
             position: relative; 
             max-width: 90vw; 
             max-height: 90vh; 
-            animation: popupSlideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        @keyframes popupSlideUp {
-            from { opacity: 0; transform: scale(0.85) translateY(30px); }
-            to   { opacity: 1; transform: scale(1) translateY(0); }
+            animation: popupSlideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
         
         .popup-close { 
@@ -1821,6 +1811,30 @@
         .spin-confirm-overlay.show { display:flex; }
         .spin-confirm-box { background:#1a1a1a; border:1px solid rgba(255,255,255,0.12); border-radius:24px 24px 0 0; padding:28px 20px; width:100%; max-width:500px; animation:slideUpPop 0.25s ease; }
         @keyframes slideUpPop { from{transform:translateY(100%);} to{transform:translateY(0);} }
+
+        /* === POPUP ANIMATIONS (smooth) === */
+        @keyframes popupOverlayFadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        @keyframes popupSlideUp {
+            from { opacity: 0; transform: translateY(60px) scale(0.95); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* === PAGE TRANSITION (dark → light) === */
+        #page-transition-mask {
+            position: fixed;
+            inset: 0;
+            background: #0a0a0a;
+            z-index: 99998;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+        #page-transition-mask.fading-in  { opacity: 1; visibility: visible; }
+        #page-transition-mask.fading-out { opacity: 0; visibility: hidden; }
         .spin-confirm-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
         .spin-confirm-opt { flex:1; margin:0 5px; border-radius:14px; padding:14px 10px; text-align:center; cursor:pointer; border:2px solid transparent; transition:0.2s; background:#111; }
         .spin-confirm-opt:hover { border-color:var(--main-red); }
@@ -1885,17 +1899,15 @@
 
 .slide-up {
     opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateY(60px);
+    transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: opacity, transform;
 }
 .slide-up.visible {
     opacity: 1;
     transform: translateY(0);
 }
-.cat-item.slide-up.visible:hover { transform: translateY(-6px) !important; }
-.prod-card.slide-up.visible:hover { transform: translateY(-3px) !important; }
 
 /* Legacy compat */
 .scroll-animate {
